@@ -58,9 +58,9 @@ async def create_div(div: schemas.DivCreate, db: Session = Depends(get_db)):
 async def create_div_cat(div_cat: schemas.Div_catCreate, db: Session = Depends(get_db)):
     return crud.create_div_cats(db=db, div_cat=div_cat)
 
-@app.post("/Factorys", response_model=schemas.Factory)
-async def create_Factory(Factory: schemas.FactoryCreate, db: Session = Depends(get_db)):
-    return crud.create_factorys(db=db, Factory=Factory)
+@app.post("/factorys", response_model=schemas.Factory)
+async def create_Factory(factory: schemas.FactoryCreate, db: Session = Depends(get_db)):
+    return crud.create_factorys(db=db, factory=factory)
 
 @app.post("/investmentitems", response_model=schemas.Investmentitem)
 async def create_investmentitem(investmentitem: schemas.InvestmentitemCreate, db: Session = Depends(get_db)):
