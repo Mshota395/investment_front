@@ -4,54 +4,77 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import datetime
 
-class DivCreate(BaseModel):
-    """
-    事業部の登録
-    """
-    div_name : str = Field(max_length = 100)
 
-
-class Div(DivCreate):
-    """
-    事業部の参照
-    """
-    div_id : int
-
-    class Config:
-        orm_mode = True
-
-class Div_catCreate(BaseModel):
-    """
-    部門の登録
-    """
-    div_id : int
-    div_cat_name : str = Field(max_length = 100)
-
-class Div_cat(Div_catCreate):
-    """
-    部門の参照
-    """
-    div_cat_id  : int
-
-    class Config:
-        orm_mode = True
-
-class FactoryCreate(BaseModel):
+class Div_factoryCreate(BaseModel):
     """
     工場名の登録
     """
-    div_id : int
-    div_cat_id : int
+    # div_id : int
+    div_name : str = Field(max_length = 100)
+    # div_cat_id : int
+    div_cat_name : str = Field(max_length = 100)
     factory_name : str = Field(max_length = 100)
 
-class Factory(FactoryCreate):
+class Div_factory(Div_factoryCreate):
     """
-    工場名の登録
+    事業部と工場名の登録
     """
+    # div_id : int
+    # div_cat_id : int
     factory_id : int
 
     class Config:
         orm_mode = True
+
+
+# class DivCreate(BaseModel):
+#     """
+#     事業部の登録
+#     """
+#     div_name : str = Field(max_length = 100)
+
+
+# class Div(DivCreate):
+#     """
+#     事業部の参照
+#     """
+#     div_id : int
+
+#     class Config:
+#         orm_mode = True
+
+# class Div_catCreate(BaseModel):
+#     """
+#     部門の登録
+#     """
+#     div_id : int
+#     div_cat_name : str = Field(max_length = 100)
+
+# class Div_cat(Div_catCreate):
+#     """
+#     部門の参照
+#     """
+#     div_cat_id  : int
+
+#     class Config:
+#         orm_mode = True
+
+# class FactoryCreate(BaseModel):
+#     """
+#     工場名の登録
+#     """
+#     div_id : int
+#     div_cat_id : int
+#     factory_name : str = Field(max_length = 100)
+
+# class Factory(FactoryCreate):
+#     """
+#     工場名の登録
+#     """
+#     factory_id : int
+
+#     class Config:
+#         orm_mode = True
 
 
 class InvestmentitemCreate(BaseModel):

@@ -4,6 +4,7 @@ import random
 import requests
 import json
 
+st.set_page_config(layout="wide")
 
 
 if "count" not in st.session_state:
@@ -27,23 +28,35 @@ if "count" not in st.session_state:
 #     factory = st.sidebar.selectbox("工場を選択してください",["ALL", "本社","ワコー","RCS"])
 # else:
 #     factory = "ALL"
+
+
+# selected_analysis = st.form_submit_button(label = "分析内容の選択")
+
+
 st.sidebar.title("事業部名選択")
 with st.sidebar.form(key = "investment_plan"):
+    #分析内容の選択
+    analysis_cat = ["稟議", "発注", "検収"]
+    selected_analysis = st.selectbox("分析項目", analysis_cat)
     # 事業部名一覧取得
-    div_url = 'http://127.0.0.1:8000/divs'
+    div_factory_url = 'http://127.0.0.1:8000/div_factorys'
 
-    res = requests.get(div_url)
-    divs = res.json()
-    st.write(res.status_code)
+    res = requests.get(div_factory_url)
+    div_factorys = res.json()
+    # st.write(res.status_code)
     divnames = {}
-    for div in divs:
+    factorys = {}
+    for div in div_factorys:
         divnames[div['div_name']] = div['div_id']
+    for factory in factorys:
+        factorys[factory["factory_name"]] = factory["factory_id"]
         
     selected_div = st.selectbox("事業部を選択してください", divnames.keys())
+    selected_factory = st.selectbox("工場を選択してください", factorys.keys())
     # if res.status_code == 200:
     #     st.success("成功")
     # st.json(res.json())
-    div_select_button = st.form_submit_button(label = "事業部選択")
+    div_select_button = st.form_submit_button(label = "分析内容と事業部選択")
 
 
 regi_div = st.sidebar.button("事業部登録画面")
@@ -52,12 +65,18 @@ if regi_div:
     st.session_state.count = 1
 
 if st.session_state.count > 0:
-    st.write("##事業部画面")
+    st.write("##事業部登録")
     with st.form(key="divs"):
         div_name : str = st.text_input("事業部名", max_chars=12)
         # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
-        data = {
+        div_data = {
             'div_name': div_name,
+            # 'tag_name': tag_name
+        }
+        factory_name : str = st.text_input("工場名", max_chars=12)
+        # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
+        factory_data = {
+            'factory_name': factory_name,
             # 'tag_name': tag_name
         }
         submit_bottun = st.form_submit_button(label="登録実行")
@@ -79,12 +98,7 @@ if st.session_state.count > 0:
 
     st.write("##工場登録")
     with st.form(key="factory"):
-        factory_name : str = st.text_input("工場名", max_chars=12)
-        # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
-        data = {
-            'div_name': div_name,
-            # 'tag_name': tag_name
-        }
+
         submit_bottun = st.form_submit_button(label="登録実行")
     if submit_bottun:
         st.write("登録内容")
