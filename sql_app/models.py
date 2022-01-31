@@ -4,17 +4,17 @@ from sqlalchemy import Column, ForeignKey, ForeignKey, Integer, String, DateTime
 from .database import Base
 
 
-class Div_Factory(Base):
+class Div_factory(Base):
     """
     工場名の登録
     """
-    __tablename__ = "fiv_factory"
+    __tablename__ = "div_factory"
     # div_id = Column(Integer, ForeignKey('div.div_id', ondelete='SET NULL'), nullable=False)
     # div_cat_id = Column(Integer, ForeignKey('div_cat.div_cat_id', ondelete='SET NULL'), nullable=False)
     factory_id = Column(Integer, primary_key=True, index = True)
     factory_name = Column(String, unique=False, index = True)
     div_name = Column(String, unique=False, index = True)
-    div_cat_name = Column(String, unique=False, index = True)
+    div_cat_name = Column(String, unique=False, index = False, nullable=True)
 
 
 

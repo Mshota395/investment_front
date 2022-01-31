@@ -34,10 +34,10 @@ def get_div_factorys(db: Session, skip: int = 0, limit: int = 100):
 """
 # 事業部工場名の登録
 def create_div_factorys(db:Session, div_factory : schemas.Div_factory):
-    db_div_factory = models.div_factory(
+    db_div_factory = models.Div_factory(
+        factory_name = div_factory.factory_name,
         div_name = div_factory.div_name,
-        div_cat_name = div_factory.div_cat_name,
-        factory_name = div_factory.factory_name
+        div_cat_name = div_factory.div_cat_name
         )
     db.add(db_div_factory)
     db.commit()

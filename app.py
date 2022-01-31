@@ -4,6 +4,8 @@ import random
 import requests
 import json
 
+from zmq import NULL
+
 st.set_page_config(layout="wide")
 
 
@@ -37,26 +39,52 @@ st.sidebar.title("事業部名選択")
 with st.sidebar.form(key = "investment_plan"):
     #分析内容の選択
     analysis_cat = ["稟議", "発注", "検収"]
-    selected_analysis = st.selectbox("分析項目", analysis_cat)
+    selected_analysis = st.sidebar.selectbox("分析項目", analysis_cat)
     # 事業部名一覧取得
     div_factory_url = 'http://127.0.0.1:8000/div_factorys'
 
     res = requests.get(div_factory_url)
+    # if res is NULL:
+    #     st.write("データがありません。")
+    #     st.button("データ登録しますか？")
+
+    # else:
+    st.sidebar.write(res)
+            
     div_factorys = res.json()
     # st.write(res.status_code)
-    divnames = {}
-    factorys = {}
-    for div in div_factorys:
-        divnames[div['div_name']] = div['div_id']
-    for factory in factorys:
-        factorys[factory["factory_name"]] = factory["factory_id"]
-        
-    selected_div = st.selectbox("事業部を選択してください", divnames.keys())
-    selected_factory = st.selectbox("工場を選択してください", factorys.keys())
-    # if res.status_code == 200:
-    #     st.success("成功")
+    div_factory_datas = {}
+    # div_datas = {}
+
+    # factorys = {}
+    for div_factory in div_factorys:
+        div_factory_datas[div_factory['factory_name']] = {
+            'factory_id' : div_factory["factory_id"],
+            'div_name' : div_factory["div_name"],
+            'div_cat_name' : div_factory["div_cat_name"]
+            }
+    # st.write(div_factory_datas)
+
+    selected_div = st.sidebar.selectbox("事業部を選択してください", div_factory_datas.keys())
+    selected_factory = st.sidebar.selectbox("工場を選択してください", div_factory_datas.keys())
+    if res.status_code == 200:
+        st.sidebar.success("成功")
     # st.json(res.json())
-    div_select_button = st.form_submit_button(label = "分析内容と事業部選択")
+    div_select_button = st.sidebar.form_submit_button(label = "分析内容と事業部選択")
+
+if div_select_button:
+    st.write("登録内容")
+    st.json(div_factory_datas)
+    st.write("レスポンス結果")
+    url = 'http://127.0.0.1:8000/div_factorys'
+    res = requests.post(
+        url,
+        div_datas = json.dumps(div_factory_datas)
+    )
+    if res.status_code == 200:
+        st.success("成功")
+    st.json(res.json())
+
 
 
 regi_div = st.sidebar.button("事業部登録画面")
@@ -68,47 +96,50 @@ if st.session_state.count > 0:
     st.write("##事業部登録")
     with st.form(key="divs"):
         div_name : str = st.text_input("事業部名", max_chars=12)
-        # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
-        div_data = {
-            'div_name': div_name,
-            # 'tag_name': tag_name
-        }
+        div_cat_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
         factory_name : str = st.text_input("工場名", max_chars=12)
-        # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
-        factory_data = {
-            'factory_name': factory_name,
+        
+        div_factory_data = {
+            'div_name': div_name,
+            'div_cat_name':div_cat_name,
+            'factory_name':factory_name
             # 'tag_name': tag_name
         }
+        # factory_name : str = st.text_input("工場名", max_chars=12)
+        # tag_name : str = st.text_input("部門名(例:フォトニクス事業部→OPM,LDなど", max_chars=12)
+        # data = {
+        #     'factory_name': factory_name,
+        #     # 'tag_name': tag_name
+        # }
         submit_bottun = st.form_submit_button(label="登録実行")
     if submit_bottun:
         st.write("登録内容")
-        st.json(data)
+        st.json(div_factory_data)
         st.write("レスポンス結果")
-        url = 'http://127.0.0.1:8000/divs'
+        url = 'http://127.0.0.1:8000/div_factorys'
         res = requests.post(
             url,
-            data = json.dumps(data)
+            data = json.dumps(div_factory_data)
         )
         if res.status_code == 200:
             st.success("成功")
         st.json(res.json())
 
 
-        regi_div = st.sidebar.button("事業部登録画面")
 
-    st.write("##工場登録")
-    with st.form(key="factory"):
+    # st.write("##工場登録")
+    # with st.form(key="factory"):
 
-        submit_bottun = st.form_submit_button(label="登録実行")
-    if submit_bottun:
-        st.write("登録内容")
-        st.json(data)
-        st.write("レスポンス結果")
-        url = 'http://127.0.0.1:8000/factorys'
-        res = requests.post(
-            url,
-            data = json.dumps(data)
-        )
-        if res.status_code == 200:
-            st.success("成功")
-        st.json(res.json())
+    #     submit_bottun = st.form_submit_button(label="登録実行")
+    # if submit_bottun:
+    #     st.write("登録内容")
+    #     st.json(div_factory_data)
+    #     st.write("レスポンス結果")
+    #     url = 'http://127.0.0.1:8000/factorys'
+    #     res = requests.post(
+    #         url,
+    #         data = json.dumps(div_factory_data)
+    #     )
+    #     if res.status_code == 200:
+    #         st.success("成功")
+    #     st.json(res.json())

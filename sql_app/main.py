@@ -27,7 +27,7 @@ def get_db():
 
 
 # 一覧の取得
-@app.get("/div_factorys", response_model = List[schemas.Div_factorys])
+@app.get("/div_factorys", response_model = List[schemas.Div_factory])
 async def read_div_factory(skip: int = 0, limit : int = 100, db : Session = Depends(get_db)):
     div_factorys = crud.get_div_factorys(db, skip=skip, limit=limit)
     return div_factorys
