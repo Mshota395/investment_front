@@ -113,7 +113,7 @@ class Investmentitem(BaseModel):
 #     factory_id : int
 #     investment_id : int 
 #     # 実績月
-#     approval_month_act : int = Field(min_value = 1,max_value = 12)
+#     approval_month_act : int = Fi∫eld(min_value = 1,max_value = 12)
 #     order_month_act : int = Field(min_value = 1,max_value = 12)
 #     acceptance_month_act : int = Field(min_value = 1,max_value = 12)
 #     # 実績金額 

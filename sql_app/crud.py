@@ -1,3 +1,4 @@
+from pyexpat import model
 from sqlalchemy.orm import Session
 from sqlalchemy.util.langhelpers import repr_tuple_names
 from . import models, schemas
@@ -9,7 +10,7 @@ from . import models, schemas
 
 #事業部工場名の取得
 def get_div_factorys(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.div_factory).offset(skip).limit(limit).all()
+    return db.query(models.Div_factory).offset(skip).limit(limit).all()
 
 
 # #事業部名の取得
@@ -91,3 +92,19 @@ def create_investmentitems(db:Session, investmentitem : schemas.Investmentitem):
     db.commit()
     db.refresh(db_investmentitem)
     return db_investmentitem
+
+
+"""
+データベースへの更新
+"""
+# 事業部工場名の更新
+def update_div_factorys(db:Session, div_factory : schemas.Div_factory, factory_id : int):
+    db_div_factory = db.query(models.Div_factory).filter_by(factory_id = factory_id).first()
+    db_div_factory.factory_name = div_factory.factory_name
+    db_div_factory.div_name = div_factory.div_name
+    db_div_factory.div_cat_name = div_factory.div_cat_name
+    # if "" in [db_div_factory.factory_name, db_div_factory.div_cat_name, db_div_factory.div_name]:
+        # db.add(db_div_factory)
+    db.commit()
+    db.refresh(db_div_factory)
+    return db_div_factory

@@ -4,6 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel, Field
+from fastapi.encoders import jsonable_encoder
 
 from . import models, schemas, crud
 from .database import SessionLocal, engine
@@ -75,3 +76,7 @@ async def create_Div_Factory(div_factory: schemas.Div_factoryCreate, db: Session
 async def create_investmentitem(investmentitem: schemas.InvestmentitemCreate, db: Session = Depends(get_db)):
     return crud.create_investmentitems(db=db, investmentitem=investmentitem)
 
+# update
+@app.put("/div_update", response_model = schemas.Div_factory)
+async def div_update(div_factory : schemas.Div_factory, db: Session = Depends(get_db)):
+    return crud.update_div_factorys(db = db, div_factory=div_factory, factory_id=div_factory.factory_id)

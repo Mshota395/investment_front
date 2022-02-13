@@ -17,15 +17,6 @@ class Div_factory(Base):
     div_cat_name = Column(String, unique=False, index = False, nullable=True)
 
 
-
-
-
-
-
-
-
-
-
 # class Div(Base):
 #     """
 #     事業部の登録
