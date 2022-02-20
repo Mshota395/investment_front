@@ -56,7 +56,7 @@ if div_select_button:
     st.json(div_factory_datas)
     st.write("レスポンス結果")
     url = 'http://127.0.0.1:8000/div_factorys'
-    res = requests.post(
+    res = requests.get(
         url,
         div_datas = json.dumps(div_factory_datas)
     )
